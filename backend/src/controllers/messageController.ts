@@ -1,16 +1,40 @@
 import { Request, Response } from 'express';
-import { supabase } from '../config/supabase';
 import { transporter } from '../config/mail';
+import fs from 'fs';
+import path from 'path';
 
-export const getMessages = async (req: Request, res: Response) => {
+// Ensure data directory exists
+const dataDir = path.join(process.cwd(), 'backend', 'data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+const MESSAGES_FILE = path.join(process.cwd(), 'backend', 'data', 'messages.json');
+
+// Initialize messages file if it doesn't exist
+if (!fs.existsSync(MESSAGES_FILE)) {
+  fs.writeFileSync(MESSAGES_FILE, JSON.stringify([], null, 2));
+}
+
+const getMessages = () => {
   try {
-    const { data, error } = await supabase
-      .from('messages')
-      .select('*')
-      .order('id', { ascending: false });
+    const data = fs.readFileSync(MESSAGES_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
+};
 
-    if (error) throw error;
-    res.json(data);
+const saveMessages = (messages: any[]) => {
+  fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2));
+};
+
+export const getMessagesHandler = async (req: Request, res: Response) => {
+  try {
+    const messages = getMessages();
+    // Sort by ID descending (newest first)
+    const sortedMessages = [...messages].sort((a: any, b: any) => b.id - a.id);
+    res.json(sortedMessages);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -20,13 +44,21 @@ export const createMessage = async (req: Request, res: Response) => {
   try {
     const { fullName, email, phone, service, message } = req.body;
     
-    // Save to DB
-    const { data, error } = await supabase
-      .from('messages')
-      .insert([{ fullName, email, phone, service, message, status: 'unread' }])
-      .select();
+    const messages = getMessages();
+    
+    const newMessage = {
+      id: Date.now(), // Simple ID generation
+      fullName,
+      email,
+      phone,
+      service,
+      message,
+      status: 'unread',
+      createdAt: new Date().toISOString()
+    };
 
-    if (error) throw error;
+    messages.push(newMessage);
+    saveMessages(messages);
 
     // Send Email Notification
     const mailOptions = {
@@ -50,7 +82,7 @@ export const createMessage = async (req: Request, res: Response) => {
       }
     });
 
-    res.status(201).json(data[0]);
+    res.status(201).json(newMessage);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -60,14 +92,18 @@ export const updateMessageStatus = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const { data, error } = await supabase
-      .from('messages')
-      .update({ status })
-      .eq('id', id)
-      .select();
+    
+    const messages = getMessages();
+    const messageIndex = messages.findIndex((m: any) => m.id === parseInt(id));
+    
+    if (messageIndex === -1) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
 
-    if (error) throw error;
-    res.json(data[0]);
+    messages[messageIndex].status = status;
+    saveMessages(messages);
+    
+    res.json(messages[messageIndex]);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -76,12 +112,17 @@ export const updateMessageStatus = async (req: Request, res: Response) => {
 export const deleteMessage = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { error } = await supabase
-      .from('messages')
-      .delete()
-      .eq('id', id);
+    
+    const messages = getMessages();
+    const messageIndex = messages.findIndex((m: any) => m.id === parseInt(id));
+    
+    if (messageIndex === -1) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
 
-    if (error) throw error;
+    const [deletedMessage] = messages.splice(messageIndex, 1);
+    saveMessages(messages);
+    
     res.json({ message: 'Message deleted successfully' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

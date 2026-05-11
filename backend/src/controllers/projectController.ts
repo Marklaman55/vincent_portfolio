@@ -1,15 +1,39 @@
 import { Request, Response } from 'express';
-import { supabase } from '../config/supabase';
+import fs from 'fs';
+import path from 'path';
 
-export const getProjects = async (req: Request, res: Response) => {
+// Ensure data directory exists
+const dataDir = path.join(process.cwd(), 'backend', 'data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+const PROJECTS_FILE = path.join(process.cwd(), 'backend', 'data', 'projects.json');
+
+// Initialize projects file if it doesn't exist
+if (!fs.existsSync(PROJECTS_FILE)) {
+  fs.writeFileSync(PROJECTS_FILE, JSON.stringify([], null, 2));
+}
+
+const getProjects = () => {
   try {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*')
-      .order('id', { ascending: false });
+    const data = fs.readFileSync(PROJECTS_FILE, 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    return [];
+  }
+};
 
-    if (error) throw error;
-    res.json(data);
+const saveProjects = (projects: any[]) => {
+  fs.writeFileSync(PROJECTS_FILE, JSON.stringify(projects, null, 2));
+};
+
+export const getProjectsHandler = async (req: Request, res: Response) => {
+  try {
+    const projects = getProjects();
+    // Sort by ID descending (newest first)
+    const sortedProjects = [...projects].sort((a: any, b: any) => b.id - a.id);
+    res.json(sortedProjects);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -17,13 +41,18 @@ export const getProjects = async (req: Request, res: Response) => {
 
 export const createProject = async (req: Request, res: Response) => {
   try {
-    const { data, error } = await supabase
-      .from('projects')
-      .insert([req.body])
-      .select();
+    const projects = getProjects();
+    
+    const newProject = {
+      id: Date.now(), // Simple ID generation
+      ...req.body,
+      createdAt: new Date().toISOString()
+    };
 
-    if (error) throw error;
-    res.status(201).json(data[0]);
+    projects.push(newProject);
+    saveProjects(projects);
+
+    res.status(201).json(newProject);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -32,14 +61,22 @@ export const createProject = async (req: Request, res: Response) => {
 export const updateProject = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { data, error } = await supabase
-      .from('projects')
-      .update(req.body)
-      .eq('id', id)
-      .select();
+    const projects = getProjects();
+    const projectIndex = projects.findIndex((p: any) => p.id === parseInt(id));
+    
+    if (projectIndex === -1) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
 
-    if (error) throw error;
-    res.json(data[0]);
+    projects[projectIndex] = {
+      ...projects[projectIndex],
+      ...req.body,
+      updatedAt: new Date().toISOString()
+    };
+    
+    saveProjects(projects);
+    
+    res.json(projects[projectIndex]);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -48,12 +85,16 @@ export const updateProject = async (req: Request, res: Response) => {
 export const deleteProject = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { error } = await supabase
-      .from('projects')
-      .delete()
-      .eq('id', id);
+    const projects = getProjects();
+    const projectIndex = projects.findIndex((p: any) => p.id === parseInt(id));
+    
+    if (projectIndex === -1) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
 
-    if (error) throw error;
+    const [deletedProject] = projects.splice(projectIndex, 1);
+    saveProjects(projects);
+    
     res.json({ message: 'Project deleted successfully' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

@@ -4,7 +4,7 @@ import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
 
-router.get('/', projectController.getProjects);
+router.get('/', projectController.getProjectsHandler);
 router.post('/', authenticateToken, projectController.createProject);
 router.put('/:id', authenticateToken, projectController.updateProject);
 router.delete('/:id', authenticateToken, projectController.deleteProject);
