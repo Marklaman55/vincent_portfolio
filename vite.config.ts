@@ -19,7 +19,7 @@ export default defineConfig(({mode}) => {
       hmr: process.env.DISABLE_HMR !== 'true',
     },
     build: {
-      outDir: 'dist',
+      outDir: path.resolve(__dirname, 'frontend/dist'),
       emptyOutDir: true,
       rollupOptions: {
         input: path.resolve(__dirname, 'frontend/index.html'),
