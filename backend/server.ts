@@ -224,7 +224,32 @@ async function startServer() {
     res.json({ url: req.file.path });
   });
 
-  // Health check
+  // Settings
+   app.get('/api/settings', async (req, res) => {
+     try {
+       if (dbConnected) {
+         const settings = await (mongoose.models.Settings || mongoose.model('Settings', new mongoose.Schema({
+           whatsapp_number: String,
+           company_email: String,
+           site_title: String,
+           site_description: String
+         }))).findOne();
+         if (settings) return res.json(settings);
+       }
+       // Default settings
+       res.json({
+         whatsapp_number: "254103591401",
+         company_email: "vincentkamau137@gmail.com",
+         site_title: "Web Hub - Futuristic Tech Agency",
+         site_description: "Web Hub is a futuristic technology agency specializing in high-performance web systems."
+       });
+     } catch (error: any) {
+       console.error('Fetch settings error:', error);
+       res.status(500).json({ error: 'Failed to fetch settings' });
+     }
+   });
+
+   // Health check
   app.get('/api/health', (req, res) => {
     res.json({ 
       status: 'ok', 

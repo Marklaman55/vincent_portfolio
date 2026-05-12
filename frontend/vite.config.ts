@@ -9,11 +9,6 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
 
-    define: {
-      // safer env exposure (Vite expects import.meta.env, not process.env)
-      "process.env.GEMINI_API_KEY": JSON.stringify(env.GEMINI_API_KEY),
-    },
-
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
@@ -25,8 +20,8 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
     },
 
-    server: {
-      hmr: process.env.DISABLE_HMR !== "true",
+    define: {
+      "process.env.GEMINI_API_KEY": JSON.stringify(env.GEMINI_API_KEY),
     },
   };
 });

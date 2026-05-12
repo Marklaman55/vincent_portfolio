@@ -6,6 +6,7 @@ import WhatsAppButton from "./components/WhatsAppButton";
 import Home from "./pages/Home";
 import Services from "./pages/Services";
 import Portfolio from "./pages/Portfolio";
+import ProjectDetail from "./pages/ProjectDetail";
 import Contact from "./pages/Contact";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -54,6 +55,16 @@ function App() {
               <Navbar />
               <main className="flex-grow">
                 <Portfolio />
+              </main>
+              <Footer />
+              <WhatsAppButton number={whatsappNumber} />
+            </>
+          } />
+          <Route path="/portfolio/:id" element={
+            <>
+              <Navbar />
+              <main className="flex-grow">
+                <ProjectDetail />
               </main>
               <Footer />
               <WhatsAppButton number={whatsappNumber} />

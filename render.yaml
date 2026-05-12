@@ -2,19 +2,25 @@ services:
   - type: web
     name: portfolio-backend
     env: node
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    buildCommand: npm install && npx tsc
+    startCommand: node server.js
     envVars:
       - key: PORT
         value: 3000
       - key: NODE_ENV
         value: production
-      - key: VITE_SUPABASE_URL
+      - key: MONGODB_URI
         fromConfig: true
-      - key: SUPABASE_SERVICE_ROLE_KEY
+      - key: CLOUDINARY_CLOUD_NAME
+        fromConfig: true
+      - key: CLOUDINARY_API_KEY
+        fromConfig: true
+      - key: CLOUDINARY_API_SECRET
         fromConfig: true
       - key: JWT_SECRET
         generateValue: true
+      - key: ADMIN_PASSWORD
+        fromConfig: true
       - key: EMAIL_USER
         fromConfig: true
       - key: EMAIL_PASS

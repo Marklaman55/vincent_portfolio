@@ -1,12 +1,18 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
   "installCommand": "npm install",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "env": {
+    "VITE_API_URL": ""
+  },
   "routes": [
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "https://your-backend-url.onrender.com/api/$1"
+      "dest": "https://backend-url.onrender.com/api/$1"
     },
     {
       "src": "/(.*)",
