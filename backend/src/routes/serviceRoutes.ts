@@ -4,7 +4,7 @@ import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
 
-router.get('/', serviceController.getServicesHandler);
+router.get('/', serviceController.getServices);
 router.post('/', authenticateToken, serviceController.createService);
 router.put('/:id', authenticateToken, serviceController.updateService);
 router.delete('/:id', authenticateToken, serviceController.deleteService);
