@@ -1,80 +1,73 @@
-import { motion } from "motion/react";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { motion } from 'motion/react';
+import { ArrowUpRight, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const Hero = () => {
+export default function Hero() {
   return (
-    <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
+    <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
+      {/* Background Accents */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 transform origin-top translate-x-20 z-0" />
+      <div className="absolute bottom-0 left-0 w-1/4 h-1/2 bg-ink/[0.02] skew-y-6 transform origin-bottom -translate-x-10 z-0" />
+      
+      <div className="max-w-7xl mx-auto px-6 w-full relative z-10">
+        <div className="max-w-4xl">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass border-primary/20 text-primary text-sm font-bold mb-8"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-3 mb-8"
           >
-            <Sparkles className="w-4 h-4" />
-            <span>Defining The Next Era of Tech</span>
+            <div className="w-12 h-0.5 bg-primary" />
+            <span className="font-mono text-sm uppercase tracking-[0.3em] text-primary font-bold">Software Engineer & Architect</span>
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tighter mb-8 leading-[1.1]"
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-6xl md:text-8xl lg:text-9xl font-display font-bold tracking-tighter leading-[0.85] mb-10 text-ink"
           >
-            The Future of <br />
-            <span className="text-gradient">Digital Connectivity</span>
+            I ARCHITECT THE <br />
+            <span className="text-gradient">DIGITAL FUTURE</span> <br />
+            THROUGH CODE
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-xl text-ink/60 max-w-2xl mx-auto mb-12 leading-relaxed"
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-xl md:text-2xl text-ink/60 mb-12 max-w-2xl leading-relaxed"
           >
-            Web Hub is a futuristic technology agency specializing in high-performance web systems, 
-            intelligent connectivity, and advanced digital ecosystems.
+            I'm Vincent Kamau, a software engineer specialized in building high-performance web systems and futuristic digital interfaces with meticulous precision.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-6"
           >
-            <Link to="/contact" className="btn-primary w-full sm:w-auto flex items-center justify-center group">
-              Start Your Journey
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Link to="/portfolio" className="btn-primary py-4 px-10 text-lg flex items-center justify-center gap-2 group">
+              View Work
+              <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </Link>
-            <Link to="/services" className="btn-secondary w-full sm:w-auto">
-              Explore Ecosystem
+            <Link to="/contact" className="btn-secondary py-4 px-10 text-lg flex items-center justify-center gap-2">
+              Let's Talk
+              <Zap className="w-5 h-5 fill-ink" />
             </Link>
           </motion.div>
         </div>
+      </div>
 
-        {/* Hero Image/Mockup Placeholder */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-20 relative"
-        >
-          <div className="glass rounded-2xl border-primary/10 overflow-hidden shadow-2xl p-2 bg-white/30">
-            <div className="bg-bg rounded-xl overflow-hidden aspect-video relative">
-              <img 
-                src="https://picsum.photos/seed/future/1920/1080" 
-                alt="Web Hub Interface" 
-                className="object-cover w-full h-full opacity-90"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-white/20 via-transparent to-transparent" />
-            </div>
-          </div>
-        </motion.div>
+      {/* Decorative Branding */}
+      <div className="absolute right-10 bottom-10 hidden xl:block">
+        <div className="flex flex-col items-end">
+          <span className="font-mono text-[10px] uppercase tracking-[0.5em] text-ink/20 transform rotate-90 origin-right translate-y-20">Established 2024</span>
+          <div className="w-px h-32 bg-ink/10 mb-4" />
+          <div className="font-display font-black text-ink/5 text-8xl">WH-A</div>
+        </div>
       </div>
     </section>
   );
-};
-
-export default Hero;
+}

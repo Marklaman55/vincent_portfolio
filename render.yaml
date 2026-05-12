@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: portfolio-backend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: NODE_ENV
+        value: production
+      - key: VITE_SUPABASE_URL
+        fromConfig: true
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        fromConfig: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: EMAIL_USER
+        fromConfig: true
+      - key: EMAIL_PASS
+        fromConfig: true
