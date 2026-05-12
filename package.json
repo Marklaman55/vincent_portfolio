@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx backend/server.ts",
     "lint": "tsc --noEmit -p frontend/tsconfig.json",
-    "build": "cd frontend && vite build && cd .. && tsc -p tsconfig.server.json",
+    "build": "cd frontend && npm run build",
     "start": "NODE_ENV=production node dist/backend/server.js",
     "clean": "rm -rf dist"
   },
