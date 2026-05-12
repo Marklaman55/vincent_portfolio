@@ -2,8 +2,9 @@ services:
   - type: web
     name: portfolio-backend
     env: node
+    rootDir: backend
     buildCommand: npm install && npx tsc
-    startCommand: node server.js
+    startCommand: node dist/server.js
     envVars:
       - key: PORT
         value: 3000
