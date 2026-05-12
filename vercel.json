@@ -3,13 +3,8 @@
   "name": "web-hub-futuristic",
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "installCommand": "cd frontend && npm install",
-        "buildCommand": "cd frontend && npm run build",
-        "distDir": "frontend/dist"
-      }
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build"
     }
   ],
   "routes": [
