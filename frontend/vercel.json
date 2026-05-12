@@ -4,7 +4,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "env": {
-    "VITE_API_URL": ""
+    "VITE_API_URL": "https://jungle-chama.onrender.com"
   },
   "routes": [
     {
@@ -12,7 +12,7 @@
     },
     {
       "src": "/api/(.*)",
-      "dest": "https://backend-url.onrender.com/api/$1"
+      "dest": "https://jungle-chama.onrender.com/api/$1"
     },
     {
       "src": "/(.*)",

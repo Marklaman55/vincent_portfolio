@@ -122,29 +122,58 @@ async function startServer() {
     res.status(401).json({ error: 'Invalid password' });
   });
 
-  // Contact Form
-  app.post('/api/contact', async (req, res) => {
-    const { name, email, message } = req.body;
+// Contact Form - also available as /messages for frontend compatibility
+   app.post('/api/contact', async (req, res) => {
+     const { name, email, message, fullName, phone, service } = req.body;
+     
+     // Support both field names for compatibility
+     const senderName = name || fullName;
 
-    if (!name || !email || !message) {
-      return res.status(400).json({ error: 'All fields are required' });
-    }
+     if (!senderName || !email || !message) {
+       return res.status(400).json({ error: 'All fields are required' });
+     }
 
-    try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_USER,
-        subject: `New Contact Form Submission from ${name}`,
-        text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-        replyTo: email,
-      });
+     try {
+       await transporter.sendMail({
+         from: process.env.EMAIL_USER,
+         to: process.env.EMAIL_USER,
+         subject: `New Contact Form Submission from ${senderName}`,
+         text: `Name: ${senderName}\nEmail: ${email}\nPhone: ${phone || 'N/A'}\nService: ${service || 'N/A'}\n\nMessage:\n${message}`,
+         replyTo: email,
+       });
 
-      res.status(200).json({ success: true, message: 'Email sent successfully' });
-    } catch (error) {
-      console.error('Email sending error:', error);
-      res.status(500).json({ error: 'Failed to send email' });
-    }
-  });
+       res.status(200).json({ success: true, message: 'Email sent successfully' });
+     } catch (error) {
+       console.error('Email sending error:', error);
+       res.status(500).json({ error: 'Failed to send email' });
+     }
+   });
+
+   // Messages API for frontend compatibility - same as contact
+   app.post('/api/messages', async (req, res) => {
+     const { name, email, message, fullName, phone, service } = req.body;
+     
+     const senderName = name || fullName;
+
+     if (!senderName || !email || !message) {
+       return res.status(400).json({ error: 'All fields are required' });
+     }
+
+     try {
+       await transporter.sendMail({
+         from: process.env.EMAIL_USER,
+         to: process.env.EMAIL_USER,
+         subject: `New Contact Form Submission from ${senderName}`,
+         text: `Name: ${senderName}\nEmail: ${email}\nPhone: ${phone || 'N/A'}\nService: ${service || 'N/A'}\n\nMessage:\n${message}`,
+         replyTo: email,
+       });
+
+       res.status(200).json({ success: true, message: 'Email sent successfully' });
+     } catch (error) {
+       console.error('Email sending error:', error);
+       res.status(500).json({ error: 'Failed to send email' });
+     }
+   });
 
   // Portfolio Management
   app.get('/api/projects', async (req, res) => {
