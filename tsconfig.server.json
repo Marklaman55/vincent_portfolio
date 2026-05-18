@@ -11,6 +11,6 @@
     "skipLibCheck": true,
     "allowJs": true
   },
-  "include": ["backend/server.ts"],
-  "exclude": ["node_modules", "frontend/**/*", "backend/server/**/*"]
+  "include": ["server.ts"],
+  "exclude": ["node_modules"]
 }

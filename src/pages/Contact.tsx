@@ -5,8 +5,8 @@ import { Mail, Phone, MapPin, Instagram, Twitter, Linkedin, Zap } from 'lucide-r
 import SEO from '../components/SEO';
 
 const contactInfo = [
-  { icon: <Mail />, label: "Email", value: "vincentkamau179@gmail.com", href: "mailto:vincentkamau179@gmail.com" },
-  { icon: <Phone />, label: "WhatsApp", value: "+254 112 561 903", href: "https://wa.me/254112561903" },
+  { icon: <Mail />, label: "Email", value: "webhubsolutionhs@gmail.com", href: "mailto:webhubsolutionhs@gmail.com" },
+  { icon: <Phone />, label: "WhatsApp", value: "+254 103 591 401", href: "https://wa.me/254103591401" },
   { icon: <MapPin />, label: "Location", value: "Nairobi, Kenya", href: "#" },
 ];
 

@@ -1,40 +1,27 @@
-# Modular Portfolio Project
+# Web Hub
 
-A professional, production-ready full-stack portfolio architecture.
+A professional, production-ready full-stack web application with integrated frontend and backend.
 
 ## Structure
-- `frontend/`: React + Vite + TypeScript (Styled with Tailwind CSS)
-- `backend/`: Express.js (Modular architecture with Supabase integration)
+- `src/` - React + Vite + TypeScript frontend (Styled with Tailwind CSS)
+- `server.ts` - Express.js backend with SQLite database
+- `server/` - Modular backend routes, controllers, and configuration
 
 ## Features
-- **Centralized API Utilities**: All frontend requests are handled via `frontend/src/api/index.ts`.
-- **Modular Backend**: Routes, Controllers, Middleware, and Config are strictly separated.
-- **Secure Authentication**: JWT-based admin login with hashed password support.
-- **Supabase Integration**: Production-ready PostgreSQL database.
-- **Nodemailer**: Automatic email notifications for new contact messages.
-- **Responsive Management**: Admin dashboards for projects, services, and settings.
+- **Full-stack Architecture**: Integrated frontend and backend in one application
+- **SQLite Database**: Local database for projects, services, messages, and settings
+- **Secure Authentication**: JWT-based admin login with hashed password support
+- **Responsive Design**: Mobile-first design with Tailwind CSS
+- **Admin Dashboard**: Manage projects, services, and messages
 
-## Deployment
+## Development
+```bash
+npm install
+npm run dev
+```
 
-### Frontend (Vercel)
-1. Push the `frontend` directory to GitHub (or use the monorepo root).
-2. Connect to Vercel.
-3. Set the Root Directory to `frontend`.
-4. Add Environmental Variables:
-   - `VITE_API_URL`: Your deployed backend URL.
-
-### Backend (Render)
-1. Push the `backend` directory to GitHub (or use the monorepo root).
-2. Connect to Render as a Web Service.
-3. Set the Build Command: `npm install && npm run build`
-4. Set the Start Command: `npm start`
-5. Add Environmental Variables:
-   - `VITE_SUPABASE_URL`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `JWT_SECRET`
-   - `EMAIL_USER`: mwaurav06@gmail.com
-   - `EMAIL_PASS`: svmw afyo yfyp hptm
-
-## Local Development
-1. Install dependencies at the root: `npm install`
-2. Run both servers: `npm run dev`
+## Deployment (Render)
+1. Push to GitHub
+2. Connect to Render as a Web Service
+3. Build Command: `npm install && npm run build`
+4. Start Command: `npm start`
