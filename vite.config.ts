@@ -12,17 +12,17 @@ export default defineConfig(({mode}) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, 'frontend/src'),
+        '@': path.resolve(__dirname, './src'),
       },
     },
     server: {
       hmr: process.env.DISABLE_HMR !== 'true',
     },
     build: {
-      outDir: path.resolve(__dirname, 'frontend/dist'),
+      outDir: path.resolve(__dirname, 'dist/client'),
       emptyOutDir: true,
       rollupOptions: {
-        input: path.resolve(__dirname, 'frontend/index.html'),
+        input: path.resolve(__dirname, 'index.html'),
       },
     },
   };
