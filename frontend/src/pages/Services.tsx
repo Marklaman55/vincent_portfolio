@@ -1,111 +1,99 @@
-import { motion } from "motion/react";
-import { Zap, LayoutList, Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import React from 'react';
+import { motion } from 'motion/react';
+import { Code, Layout, Globe, Cpu, Shield, Zap, Sparkles, Megaphone } from 'lucide-react';
+import SEO from '../components/SEO';
 
-const Services = () => {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+const services = [
+  {
+    icon: <Code />,
+    title: "Web Systems",
+    desc: "Complex backend architectures, API development, and lightning-fast frontend applications.",
+    tech: ["React", "Node.js", "TypeScript", "PostgreSQL"]
+  },
+  {
+    icon: <Layout />,
+    title: "UI Architecture",
+    desc: "Meticulous design systems that prioritize user experience and aesthetic perfection.",
+    tech: ["Figma", "Tailwind CSS", "Motion", "Design Ops"]
+  },
+  {
+    icon: <Globe />,
+    title: "Digital Branding",
+    desc: "Defining your digital identity through futuristic visuals and strong core messaging.",
+    tech: ["Motion Graphics", "Color Theory", "Typography", "Visual Language"]
+  },
+  {
+    icon: <Cpu />,
+    title: "Custom SaaS",
+    desc: "Full-lifecycle development for your software as a service product ideas.",
+    tech: ["SaaS Architecture", "Multi-tenancy", "Scalable Storage", "IAM"]
+  },
+  {
+    icon: <Shield />,
+    title: "Cyber Security",
+    desc: "Hardening your digital assets against modern threats and data breaches.",
+    tech: ["Auth Systems", "Encryption", "Security Audits", "Data Integrity"]
+  },
+  {
+    icon: <Megaphone />,
+    title: "Growth Engine",
+    desc: "Strategic marketing and SEO optimizations to scale your user base exponentially.",
+    tech: ["SEO", "Performance Marketing", "Content Strategy", "Analytics"]
+  }
+];
 
-  useEffect(() => {
-    // Fetch services from API
-    fetch("/api/services")
-      .then(res => res.json())
-      .then(data => {
-        setServices(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Services Fetch Error:", err);
-        setLoading(false);
-      });
-  }, []);
-
-  const filteredServices = services.filter(service =>
-    service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (service.description && service.description.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
-
+export default function Services() {
   return (
-    <section className="py-24 bg-white/[0.01]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-          <div className="max-w-2xl">
-            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
-              Our <span className="text-gradient">Services</span>
-            </h2>
-            <p className="text-lg text-ink/60">
-              Comprehensive digital solutions designed to elevate your business and drive measurable results.
-            </p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              placeholder="Search services..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="input input-bordered input-sm w-48 md:w-64"
-            />
-          </div>
+    <div className="pt-32 pb-20 bg-bg min-h-screen">
+      <SEO title="Services" />
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-3xl mb-24">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center gap-3 mb-8"
+          >
+            <div className="w-12 h-0.5 bg-primary" />
+            <span className="font-mono text-xs uppercase tracking-[0.3em] text-primary font-bold">What We Offer</span>
+          </motion.div>
+          <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tighter text-ink leading-tight">
+            MULTIDISCIPLINARY <br />
+            <span className="text-gradient">CAPABILITIES</span>
+          </h1>
+          <p className="text-xl text-ink/60 mt-8 leading-relaxed max-w-xl">
+            We operate at the intersection of technology, design, and strategy to build solutions that don't just work, but inspire.
+          </p>
         </div>
 
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-2 text-ink/60">Loading services...</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {filteredServices.length > 0 ? (
-              filteredServices.map((service, index) => (
-                <motion.div
-                  key={service.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="group"
-                >
-                  <div className="glass rounded-2xl overflow-hidden border-primary/10 glass-hover bg-white/40 p-6">
-                    <div className="flex items-center space-x-4 mb-4">
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                        <Zap className="w-5 h-5 text-primary" />
-                      </div>
-                      <h3 className="text-xl font-display font-bold">{service.name}</h3>
-                    </div>
-                    <p className="text-ink/60 mb-4 line-clamp-3">
-                      {service.description}
-                    </p>
-                    {service.features && service.features.length > 0 && (
-                      <ul className="space-y-2 text-sm text-ink/50 mb-4">
-                        {service.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-center space-x-2">
-                            <Search className="w-3 h-3 text-primary/50" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    <a
-                      href={`/services/${service.id}`}
-                      className="btn-primary px-4 py-2 text-sm flex items-center space-x-2 hover:bg-primary/90 transition-all"
-                    >
-                      Learn More
-                      <ArrowUpRight className="w-3 h-3" />
-                    </a>
-                  </div>
-                </motion.div>
-              ))
-            ) : (
-              <div className="col-span-3 text-center py-12">
-                <p className="text-ink/60">No services found matching your search.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true }}
+              className="group p-8 border border-border rounded-3xl hover:bg-ink hover:text-white transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+            >
+              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-8 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                {React.cloneElement(service.icon as React.ReactElement<any>, { size: 32 })}
               </div>
-            )}
-          </div>
-        )}
+              <h3 className="text-3xl font-display font-bold mb-4 group-hover:text-primary transition-colors">{service.title}</h3>
+              <p className="text-ink/60 mb-8 leading-relaxed group-hover:text-white/60 transition-colors">
+                {service.desc}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {service.tech.map((t, idx) => (
+                  <span key={idx} className="px-3 py-1 bg-ink/5 group-hover:bg-white/10 rounded-full font-mono text-[10px] uppercase tracking-wider text-ink/40 group-hover:text-white/40">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </section>
+    </div>
   );
-};
-
-export default Services;
+}

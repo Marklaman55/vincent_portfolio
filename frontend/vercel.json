@@ -1,18 +1,16 @@
 {
   "version": 2,
-  "installCommand": "npm install",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "env": {
-    "VITE_API_URL": "https://jungle-chama.onrender.com"
-  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    }
+  ],
   "routes": [
     {
-      "handle": "filesystem"
-    },
-    {
       "src": "/api/(.*)",
-      "dest": "https://jungle-chama.onrender.com/api/$1"
+      "dest": "https://your-backend-url.onrender.com/api/$1"
     },
     {
       "src": "/(.*)",

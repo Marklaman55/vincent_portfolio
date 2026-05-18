@@ -1,146 +1,143 @@
-import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getSettingsData as getSettings } from "../api/settings";
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X, Code2, Github, User as UserIcon } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { motion, AnimatePresence } from 'motion/react';
+import { useAuth } from '../context/AuthContext';
 
-const Navbar = () => {
-  const [settings, setSettings] = useState<any>({
-    whatsapp_number: "254103591401",
-    company_email: "vincentkamau137@gmail.com"
-  });
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+  const { user } = useAuth();
 
   useEffect(() => {
-    getSettings().then(data => {
-      if (data && Object.keys(data).length > 0) {
-        setSettings(data);
-      }
-    }).catch(err => console.error("Navbar Settings Error:", err));
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Pricing', path: '/pricing' },
+    { name: 'Portfolio', path: '/portfolio' },
+    { name: 'Contact', path: '/contact' },
+  ];
+
   return (
-    <nav className="bg-white/90 backdrop-blur-sm border-b border-primary/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center justify-between py-4">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg bg-tech-gradient flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9.583 12l2.667-2.667a4.5 4.5 0 016.364 6.364l-2.667 2.667a3 3 0 01-4.242 0l-1.415-1.415a1.5 1.5 0 00-2.121 0l-1.414 1.414a1.5 1.5 0 002.121 2.121l1.415-1.415zM6 6a3 3 0 110-6 3 3 0 000 6zm0 9a3 3 0 100-6 3 3 0 000 6z" />
-              </svg>
+    <nav className={cn(
+      "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6",
+      isScrolled ? "py-4" : "py-8"
+    )}>
+      <div className={cn(
+        "max-w-7xl mx-auto rounded-3xl transition-all duration-300",
+        isScrolled ? "bg-white/80 backdrop-blur-xl shadow-2xl border border-white/20 px-8 py-4" : "bg-transparent px-0 py-0"
+      )}>
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 bg-ink rounded-xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+              <Code2 size={20} />
             </div>
-            <span className="text-xl font-display font-bold tracking-tighter uppercase">
-              VINCENT<span className="text-gradient">KAMAU</span>
-            </span>
-          </div>
-          <div className="hidden md:flex md:items-center md:space-x-6">
-            <NavLink 
-              to="/" 
-              className={(props) => 
-                props.isActive 
-                  ? "text-primary font-medium px-3 py-2 rounded-md text-sm font-display hover:bg-primary/5" 
-                  : "text-ink/60 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-display hover:bg-primary/5"
-              }
-            >
-              Home
-            </NavLink>
-            <NavLink 
-              to="/services" 
-              className={(props) => 
-                props.isActive 
-                  ? "text-primary font-medium px-3 py-2 rounded-md text-sm font-display hover:bg-primary/5" 
-                  : "text-ink/60 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-display hover:bg-primary/5"
-              }
-            >
-              Services
-            </NavLink>
-            <NavLink 
-              to="/portfolio" 
-              className={(props) => 
-                props.isActive 
-                  ? "text-primary font-medium px-3 py-2 rounded-md text-sm font-display hover:bg-primary/5" 
-                  : "text-ink/60 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-display hover:bg-primary/5"
-              }
-            >
-              Portfolio
-            </NavLink>
-            <NavLink 
-              to="/contact" 
-              className={(props) => 
-                props.isActive 
-                  ? "text-primary font-medium px-3 py-2 rounded-md text-sm font-display hover:bg-primary/5" 
-                  : "text-ink/60 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-display hover:bg-primary/5"
-              }
-            >
-              Contact
-            </NavLink>
-          </div>
-          <div className="flex items-center space-x-4">
-            <a 
-              href={`https://wa.me/${settings.whatsapp_number}`} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-primary px-4 py-2 text-sm flex items-center space-x-2"
-            >
-              WhatsApp
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21h8.25c1.102 0 2- .898 2-2V9c0-1.102-.898-2-2-2H8.25c-1.102 0-2 .898-2 2v10c0 1.102.898 2 2 2z" />
-              </svg>
+            <span className="text-xl font-display font-bold text-ink tracking-tight uppercase">WebHub</span>
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={cn(
+                  "font-mono text-xs uppercase tracking-widest transition-colors",
+                  location.pathname === link.path ? "text-primary font-bold" : "text-ink/60 hover:text-primary"
+                )}
+              >
+                {link.name}
+              </Link>
+            ))}
+            
+            <a href="https://github.com/Marklaman55" target="_blank" rel="noopener noreferrer" className="text-ink/40 hover:text-ink transition-colors">
+              <Github size={18} />
             </a>
+
+            {user ? (
+              <Link to="/account" className="flex items-center gap-2 px-4 py-2 bg-ink/5 rounded-xl text-ink font-mono text-[10px] uppercase tracking-widest hover:bg-ink hover:text-white transition-all">
+                <UserIcon size={14} /> Account
+              </Link>
+            ) : (
+              <Link to="/login" className="btn-primary py-3 px-8 text-xs">
+                Log In
+              </Link>
+            )}
           </div>
-        </div>
-        <div className="flex items-center px-4 pt-2">
-          <div className="flex-1"></div>
-          <a 
-            href={`https://wa.me/${settings.whatsapp_number}`} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="hidden md:block btn-primary px-4 py-2 text-sm flex items-center space-x-2"
-          >
-            WhatsApp
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21h8.25c1.102 0 2- .898 2-2V9c0-1.102-.898-2-2-2H8.25c-1.102 0-2 .898-2 2v10c0 1.102.898 2 2 2z" />
-            </svg>
-          </a>
+
+          {/* Mobile Toggle */}
           <button 
-            className="md:hidden btn-secondary px-4 py-2 text-sm flex items-center space-x-2"
-            id="mobile-menu-button"
-            aria-label="Open mobile menu"
+            className="md:hidden text-ink p-2"
+            onClick={() => setIsOpen(!isOpen)}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-        {/* Mobile Menu */}
-        <div className="md:hidden" id="mobile-menu">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <NavLink 
-              to="/" 
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-primary/5"
-            >
-              Home
-            </NavLink>
-            <NavLink 
-              to="/services" 
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-primary/5"
-            >
-              Services
-            </NavLink>
-            <NavLink 
-              to="/portfolio" 
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-primary/5"
-            >
-              Portfolio
-            </NavLink>
-            <NavLink 
-              to="/contact" 
-              className="block px-3 py-2 rounded-md text-base font-medium hover:bg-primary/5"
-            >
-              Contact
-            </NavLink>
-          </div>
-        </div>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-6 right-6 mt-4 md:hidden"
+          >
+            <div className="bg-white rounded-3xl shadow-2xl border border-border overflow-hidden p-6 flex flex-col gap-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={cn(
+                    "text-2xl font-display font-bold",
+                    location.pathname === link.path ? "text-primary" : "text-ink"
+                  )}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <div className="pt-6 border-t border-ink/5 flex flex-col gap-4">
+                <a 
+                  href="https://github.com/Marklaman55" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-ink/60 font-mono text-xs uppercase tracking-widest"
+                >
+                  <Github size={18} /> GitHub Profile
+                </a>
+                {user ? (
+                  <Link to="/account" className="btn-primary py-4 text-center">
+                    My Account
+                  </Link>
+                ) : (
+                  <div className="grid grid-cols-2 gap-4">
+                    <Link to="/login" className="px-6 py-4 rounded-xl bg-ink/5 text-ink font-display font-bold text-center">
+                      Log In
+                    </Link>
+                    <Link to="/signup" className="btn-primary py-4 text-center">
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
-};
-
-export default Navbar;
+}

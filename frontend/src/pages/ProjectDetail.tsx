@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { Loader2, ArrowLeft, Globe, Briefcase, Calendar } from 'lucide-react';
 import SEO from '../components/SEO';
 import { cn } from '../lib/utils';
+import 'react-quill-new/dist/quill.snow.css';
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
@@ -55,8 +56,10 @@ export default function ProjectDetail() {
     );
   }
 
+  // Extract keywords from category and description
   const keywords = `${project.category}, ${project.title}, web development, UI UX design, portfolio, case study`.toLowerCase();
   
+  // Create a clean meta description
   const metaDescription = project.description 
     ? project.description.replace(/<[^>]*>/g, '').substring(0, 160).trim() + '...'
     : `Detailed information about the work on ${project.title} in the ${project.category} category.`;
@@ -70,6 +73,7 @@ export default function ProjectDetail() {
       />
       
       <div className="max-w-7xl mx-auto px-6">
+        {/* Navigation */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -84,6 +88,7 @@ export default function ProjectDetail() {
           </Link>
         </motion.div>
 
+        {/* Hero Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -146,6 +151,7 @@ export default function ProjectDetail() {
           </motion.div>
         </div>
 
+        {/* Content Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

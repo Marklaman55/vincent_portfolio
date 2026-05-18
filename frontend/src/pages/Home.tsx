@@ -1,95 +1,135 @@
-import { motion } from "motion/react";
-import { ArrowUpRight, Zap } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+import Hero from '../components/Hero';
+import ProjectPreview from '../components/ProjectPreview';
+import PricingSection from '../components/PricingSection';
+import { ArrowRight, Code, Layout, Smartphone, Globe } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
-const Home = () => {
-  const [settings, setSettings] = useState<any>({
-    whatsapp_number: "254103591401",
-    company_email: "vincentkamau137@gmail.com"
-  });
+export default function Home() {
+  const [featuredProjects, setFeaturedProjects] = useState<any[]>([]);
 
   useEffect(() => {
-    // Fetch settings from API
-    fetch("/api/settings")
-      .then(res => res.json())
-      .then(data => setSettings(data))
-      .catch(err => console.error("Home Settings Error:", err));
+    fetch('/api/projects')
+      .then(async res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new TypeError("Expected JSON response from server");
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (Array.isArray(data)) {
+          setFeaturedProjects(data.slice(0, 3));
+        }
+      })
+      .catch(err => console.error('Failed to fetch home projects:', err));
   }, []);
 
+  const services = [
+    { 
+      icon: <Code className="w-8 h-8" />, 
+      title: "Web Systems", 
+      desc: "Building complex, scalable web infrastructures using modern frameworks." 
+    },
+    { 
+      icon: <Layout className="w-8 h-8" />, 
+      title: "UI Architecture", 
+      desc: "Crafting beautiful, functional interfaces with meticulous attention to detail." 
+    },
+    { 
+      icon: <Globe className="w-8 h-8" />, 
+      title: "Digital Strategy", 
+      desc: "Positioning brands for success in the competitive digital landscape." 
+    },
+  ];
+
   return (
-    <section className="relative min-h-screen bg-gradient-to-b from-black/50 via-black/70 to-black/90">
-      {/* Animated Background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="relative h-full w-full">
-          <svg className="absolute inset-0" width="100%" height="100%" viewBox="0 0 1440 320">
-            <path fill="opacity-20" fillOpacity={0.03} d="M0,160L48,176C96,192,192,224,288,208C384,192,480,128,576,112C672,96,768,128,864,160C960,192,1056,224,1152,208C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,352,1248,384,1152,416C1056,448,960,416,864,384C768,352,672,320,576,288C480,256,384,224,288,192C192,160,96,128,48,96L0,64Z"></path>
-          </svg>
+    <div className="bg-bg">
+      <SEO title="Home" />
+      <Hero />
+
+      {/* Services Section */}
+      <section className="py-32 bg-ink text-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <div className="max-w-2xl">
+              <span className="font-mono text-xs uppercase tracking-[0.4em] text-primary mb-6 block">Capabilities</span>
+              <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter leading-tight">
+                WE PROVIDE END-TO-END <br />
+                <span className="text-primary">DIGITAL SOLUTIONS</span>
+              </h2>
+            </div>
+            <Link to="/services" className="group flex items-center gap-3 text-white/60 hover:text-white transition-colors pb-2 border-b border-white/20">
+              Explore All Services
+              <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {services.map((service, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="p-8 border border-white/10 rounded-2xl hover:bg-white/5 transition-colors group"
+              >
+                <div className="mb-6 text-primary group-hover:scale-110 transition-transform origin-left">{service.icon}</div>
+                <h3 className="text-2xl font-display font-bold mb-4">{service.title}</h3>
+                <p className="text-white/50 leading-relaxed">{service.desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="relative z-10 flex flex-col items-center justify-center px-6 py-24 md:py-32 text-center">
-        <motion.h1
-          whileInView={{ scale: [0.8, 1], opacity: [0, 1] }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="mb-6 text-5xl md:text-6xl font-display font-bold text-white tracking-tighter"
-        >
-          Transforming Ideas<span className="text-gradient"> Into Reality</span>
-        </motion.h1>
+      {/* Projects Section */}
+      <section className="py-32">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8 text-ink">
+            <div className="max-w-2xl">
+              <span className="font-mono text-xs uppercase tracking-[0.4em] text-primary mb-6 block">Selected Work</span>
+              <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter leading-tight">
+                CRAFTING FUTURE-READY <br />
+                <span className="text-gradient">SOLUTIONS</span>
+              </h2>
+            </div>
+          </div>
 
-        <motion.p
-          whileInView={{ scale: [0.8, 1], opacity: [0, 1] }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="mb-10 max-w-2xl text-lg text-ink/60"
-        >
-          Full-stack developer specializing in scalable web applications, AI integration, and digital transformation solutions for businesses seeking to innovate and grow in the digital landscape.
-        </motion.p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {featuredProjects.map((project, i) => (
+              <ProjectPreview 
+                key={project._id || i} 
+                index={i}
+                title={project.title} 
+                category={project.category} 
+                image={project.image} 
+                link={project.link}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
 
-        <motion.div
-          whileInView={{ scale: [0.8, 1], opacity: [0, 1] }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="flex flex-wrap gap-4 justify-center"
-        >
-          <a
-            href="#services"
-            className="btn-primary px-8 py-3 text-lg flex items-center space-x-2 hover:bg-primary/90 transition-all"
-          >
-            Our Services
-            <ArrowUpRight className="w-4 h-4" />
-          </a>
-          <a
-            href="/portfolio"
-            className="btn-secondary px-8 py-3 text-lg flex items-center space-x-2 hover:bg-secondary/90 transition-all"
-          >
-            View Portfolio
-            <Zap className="w-4 h-4" />
-          </a>
-        </motion.div>
+      <PricingSection />
 
-        {/* WhatsApp CTA */}
-        <motion.div
-          whileInView={{ scale: [0.8, 1], opacity: [0, 1] }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="mt-12 flex items-center space-x-3 text-sm text-ink/60"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-5 h-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M8.25 21h8.25c1.102 0 2- .898 2-2V9c0-1.102-.898-2-2-2H8.25c-1.102 0-2 .898-2 2v10c0 1.102.898 2 2 2z"
-            />
-          </svg>
-          <span>Chat with us on WhatsApp: {settings.whatsapp_number}</span>
-        </motion.div>
-      </div>
-    </section>
+      {/* CTA Section */}
+      <section className="py-32 bg-primary">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tighter text-ink mb-12">
+            HAVE A VISION? <br />
+            LET'S ARCHITECT IT.
+          </h2>
+          <Link to="/contact" className="inline-flex items-center gap-4 text-2xl font-display font-bold bg-ink text-white py-6 px-12 rounded-full hover:scale-105 transition-transform group">
+            Start Your Journey
+            <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+          </Link>
+        </div>
+      </section>
+    </div>
   );
-};
-
-export default Home;
+}

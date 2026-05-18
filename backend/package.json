@@ -2,10 +2,9 @@
   "name": "portfolio-backend",
   "version": "1.0.0",
   "type": "module",
-  "main": "dist/server.js",
+  "main": "server.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node server.ts",
     "dev": "tsx server.ts"
   },
   "dependencies": {

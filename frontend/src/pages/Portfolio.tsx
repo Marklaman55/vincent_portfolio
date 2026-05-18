@@ -5,7 +5,7 @@ import ProjectPreview from '../components/ProjectPreview';
 import { Loader2, Sparkles } from 'lucide-react';
 import SEO from '../components/SEO';
 import { cn } from '../lib/utils';
-
+import 'react-quill-new/dist/quill.snow.css'; // Import styles for content rendering
 
 export interface Project {
   _id: string;
