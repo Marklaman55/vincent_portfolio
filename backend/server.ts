@@ -104,7 +104,11 @@ async function startServer() {
   const PORT = process.env.PORT || 3000;
 
   // Middleware
-  app.use(cors());
+  const corsOptions = {
+    origin: process.env.FRONTEND_URL || 'https://webhub-08uf.onrender.com',
+    credentials: true,
+  };
+  app.use(cors(corsOptions));
   app.use(express.json());
 
   // Simple Auth Middleware
