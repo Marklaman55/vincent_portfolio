@@ -105,7 +105,13 @@ async function startServer() {
 
   // Middleware
   const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'https://webhub-08uf.onrender.com',
+    origin: [
+      process.env.FRONTEND_URL || '',
+      'https://webhub-08uf.onrender.com',
+      'https://webhub-git-main-vincentkamau179-3847s-projects.vercel.app',
+      'http://localhost:5173',
+      'http://localhost:3000'
+    ].filter(Boolean),
     credentials: true,
   };
   app.use(cors(corsOptions));
