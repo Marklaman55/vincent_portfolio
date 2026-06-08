@@ -1,7 +1,7 @@
 import { MessageCircle } from 'lucide-react';
 
 export default function WhatsAppButton() {
-  const whatsappUrl = "https://wa.me/254712345678"; // Replace with real number if known
+  const whatsappUrl = "https://wa.me/254112561903";
 
   return (
     <a 
