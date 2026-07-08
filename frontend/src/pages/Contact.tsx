@@ -1,12 +1,11 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import ContactForm from '../components/ContactForm';
 import { Mail, Phone, MapPin, Instagram, Twitter, Linkedin, Zap } from 'lucide-react';
 import SEO from '../components/SEO';
 
 const contactInfo = [
-  { icon: <Mail />, label: "Email", value: "vincentkamau179@gmail.com", href: "mailto:vincentkamau179@gmail.com" },
-  { icon: <Phone />, label: "WhatsApp", value: "+254 112 561 903", href: "https://wa.me/254112561903" },
+  { icon: <Mail />, label: "Email", value: "webhubsolutions@gmail.com", href: "mailto:webhubsolutions@gmail.com" },
+  { icon: <Phone />, label: "WhatsApp", value: "0103591401", href: "https://wa.me/254103591401" },
   { icon: <MapPin />, label: "Location", value: "Nairobi, Kenya", href: "#" },
 ];
 
@@ -73,10 +72,25 @@ export default function Contact() {
 
           <div className="relative">
              <div className="absolute inset-0 bg-primary/5 -skew-x-6 transform translate-x-4 translate-y-4 rounded-3xl" />
-             <div className="relative">
-                <ContactForm />
+             <div className="relative glass p-10 rounded-[2.5rem] border border-white/10 shadow-2xl">
+               <div className="text-center mb-8">
+                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto mb-6">
+                   <Phone size={28} />
+                 </div>
+                 <h3 className="text-2xl font-display font-bold text-ink mb-2">Text us on WhatsApp</h3>
+                 <p className="text-ink/60 mb-6">We typically reply within minutes during business hours.</p>
+                 <a
+                   href="https://wa.me/254103591401"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   className="inline-flex items-center gap-3 bg-[#25D366] text-white px-8 py-4 rounded-2xl font-bold text-lg hover:scale-105 transition-transform"
+                 >
+                   <Phone size={20} />
+                   Chat Now
+                 </a>
+               </div>
              </div>
-             
+
              {/* Decorative Elements */}
              <div className="absolute -bottom-10 -left-10 w-32 h-32 border-2 border-primary/20 rounded-full flex items-center justify-center animate-spin-slow">
                 <Zap size={40} className="text-primary/20" />

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Check, Zap, Rocket, ShoppingCart, Gift, Award, Loader2, Smartphone, X, ShieldCheck, ArrowRight } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { Check, Zap, Rocket, ShoppingCart, Gift, Award, Loader2, Smartphone, X, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const plans = [
@@ -74,68 +73,13 @@ const plans = [
 ];
 
 const PricingSection = () => {
-  const { user, updateUserPlan, token } = useAuth();
   const navigate = useNavigate();
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentStep, setPaymentStep] = useState<'details' | 'processing' | 'success'>('details');
+  const [paymentStep, setPaymentStep] = useState<'details' | 'success'>('details');
 
   const handleSelectPlan = (plan: any) => {
-    if (!user) {
-      navigate('/signup');
-      return;
-    }
     setSelectedPlan(plan);
     setPaymentStep('details');
-  };
-
-  const handleMpesaPayment = async () => {
-    if (!phoneNumber || phoneNumber.length < 10) {
-      alert("Please enter a valid M-Pesa mobile number (e.g., 2547XXXXXXXX)");
-      return;
-    }
-
-    setIsProcessing(true);
-    setPaymentStep('processing');
-
-    try {
-      // 1. Trigger STK Push
-      const res = await fetch('/api/mpesa/stkpush', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          phoneNumber: phoneNumber.startsWith('0') ? '254' + phoneNumber.slice(1) : phoneNumber,
-          amount: selectedPlan.discountPrice.replace(/,/g, '')
-        })
-      });
-
-      if (!res.ok) throw new Error('STK Push failed');
-
-      // 2. Since STK pushes are async, for this demo we'll wait a bit and simulate success
-      // In a real app, you'd poll an endpoint or wait for a webhook to update the user state
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      
-      // 3. Update User Plan
-      await updateUserPlan(selectedPlan.name);
-      
-      setPaymentStep('success');
-      setTimeout(() => {
-        setSelectedPlan(null);
-        navigate('/account');
-      }, 3000);
-
-    } catch (err) {
-      console.error('Payment error:', err);
-      alert("Payment failed. Please try again.");
-      setPaymentStep('details');
-    } finally {
-      setIsProcessing(false);
-    }
   };
 
   return (
@@ -281,7 +225,7 @@ const PricingSection = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onClick={() => !isProcessing && setSelectedPlan(null)}
+                onClick={() => setSelectedPlan(null)}
                 className="absolute inset-0 bg-ink/80 backdrop-blur-md"
               />
               
@@ -300,16 +244,14 @@ const PricingSection = () => {
                       <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
                         <Smartphone size={20} />
                       </div>
-                      <h4 className="text-xl font-display font-bold text-white uppercase tracking-tight">Checkout</h4>
+                      <h4 className="text-xl font-display font-bold text-white uppercase tracking-tight">Get Started</h4>
                     </div>
-                    {!isProcessing && (
-                      <button 
-                        onClick={() => setSelectedPlan(null)}
-                        className="text-white/40 hover:text-white transition-colors"
-                      >
-                        <X size={24} />
-                      </button>
-                    )}
+                    <button 
+                      onClick={() => setSelectedPlan(null)}
+                      className="text-white/40 hover:text-white transition-colors"
+                    >
+                      <X size={24} />
+                    </button>
                   </div>
 
                   {paymentStep === 'details' && (
@@ -327,57 +269,16 @@ const PricingSection = () => {
                       </div>
 
                       <div className="space-y-6">
-                        <div>
-                          <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40 mb-3 block">
-                            M-Pesa Mobile Number
-                          </label>
-                          <div className="relative">
-                            <input 
-                              type="tel"
-                              placeholder="2547XXXXXXXX"
-                              value={phoneNumber}
-                              onChange={(e) => setPhoneNumber(e.target.value)}
-                              className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-6 text-white text-lg focus:border-primary focus:bg-white/[0.08] outline-none transition-all placeholder:text-white/10"
-                            />
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20">
-                              <Check size={20} />
-                            </div>
-                          </div>
-                          <p className="mt-2 text-white/30 text-[10px] leading-relaxed italic">
-                            Enter the number that will receive the STK push to authorize payment.
-                          </p>
-                        </div>
-
-                        <button 
-                          onClick={handleMpesaPayment}
+                        <p className="text-white/60 text-sm">To get started with this plan, contact us on WhatsApp. We'll guide you through setup and payment.</p>
+                        
+                        <a 
+                          href={`https://wa.me/254103591401?text=${encodeURIComponent("Hi, I'm interested in the " + selectedPlan.name + " plan at KES " + selectedPlan.discountPrice)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="w-full btn-primary py-5 text-lg flex items-center justify-center gap-3 group"
                         >
-                          Unlock This Plan <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {paymentStep === 'processing' && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }} 
-                      animate={{ opacity: 1, y: 0 }}
-                      className="py-12 text-center"
-                    >
-                      <div className="relative w-24 h-24 mx-auto mb-8">
-                        <div className="absolute inset-0 border-4 border-primary/20 rounded-full"></div>
-                        <div className="absolute inset-0 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-                        <div className="absolute inset-4 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                          <Smartphone size={32} />
-                        </div>
-                      </div>
-                      <h5 className="text-2xl font-display font-bold text-white mb-4">Requesting STK Push...</h5>
-                      <p className="text-white/50 text-sm max-w-sm mx-auto leading-relaxed">
-                        Please check your phone for an M-Pesa prompt and enter your PIN to authorize the transaction.
-                      </p>
-                      <div className="mt-10 flex items-center justify-center gap-2 text-white/40 font-mono text-[10px] uppercase tracking-widest">
-                        <ShieldCheck size={14} className="text-green-500" />
-                        Secure Encrypted Transaction
+                          <Phone size={20} /> Chat on WhatsApp
+                        </a>
                       </div>
                     </motion.div>
                   )}
@@ -391,12 +292,12 @@ const PricingSection = () => {
                       <div className="w-24 h-24 bg-green-500 rounded-full mx-auto mb-8 flex items-center justify-center text-ink shadow-[0_0_50px_rgba(34,197,94,0.4)]">
                         <Check size={48} strokeWidth={3} />
                       </div>
-                      <h5 className="text-3xl font-display font-bold text-white mb-4">Payment Confirmed!</h5>
+                      <h5 className="text-3xl font-display font-bold text-white mb-4">We'll be in touch!</h5>
                       <p className="text-white/60 text-sm mb-8">
-                        Your plan has been activated. Welcome to WebHub Technologies!
+                        Check your WhatsApp for a message from our team.
                       </p>
                       <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 rounded-full text-white/40 font-mono text-[10px] uppercase tracking-widest border border-white/5 animate-pulse">
-                        Redirecting to Dashboard...
+                        Redirecting...
                       </div>
                     </motion.div>
                   )}

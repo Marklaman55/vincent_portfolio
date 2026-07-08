@@ -1,54 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Loader2, ArrowLeft, Globe, Briefcase, Calendar } from 'lucide-react';
 import SEO from '../components/SEO';
 import { cn } from '../lib/utils';
 import 'react-quill-new/dist/quill.snow.css';
+import { projects } from '../data/projects';
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const [project, setProject] = useState<any | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [project] = useState<any | null>(projects.find(p => p._id === id) || null);
 
-  useEffect(() => {
-    setLoading(true);
-    fetch(`/api/projects/${id}`)
-      .then(async res => {
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.error || 'Project not found');
-        }
-        return res.json();
-      })
-      .then(data => {
-        setProject(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching project:', err);
-        setError(err.message);
-        setLoading(false);
-      });
-  }, [id]);
-
-  if (loading) {
-    return (
-      <div className="pt-32 pb-20 bg-bg min-h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-10 h-10 animate-spin text-primary" />
-          <p className="text-ink/60 font-mono text-sm uppercase tracking-widest">Loading Project Details</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !project) {
+  if (!project) {
     return (
       <div className="pt-32 pb-20 bg-bg min-h-screen flex flex-col items-center justify-center px-6 text-center">
         <h1 className="text-4xl font-display font-bold text-ink mb-4">Project Not Found</h1>
-        <p className="text-ink/60 mb-8 max-w-md">{error || "The project you're looking for doesn't exist or has been moved."}</p>
+        <p className="text-ink/60 mb-8 max-w-md">The project you're looking for doesn't exist or has been moved.</p>
         <Link to="/portfolio" className="btn-primary py-3 px-8 flex items-center gap-2">
           <ArrowLeft size={18} /> Back to Portfolio
         </Link>

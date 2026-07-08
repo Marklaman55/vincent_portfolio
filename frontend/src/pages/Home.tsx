@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
 import Hero from '../components/Hero';
 import ProjectPreview from '../components/ProjectPreview';
@@ -6,27 +6,10 @@ import PricingSection from '../components/PricingSection';
 import { ArrowRight, Code, Layout, Smartphone, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import { projects } from '../data/projects';
 
 export default function Home() {
-  const [featuredProjects, setFeaturedProjects] = useState<any[]>([]);
-
-  useEffect(() => {
-    fetch('/api/projects')
-      .then(async res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new TypeError("Expected JSON response from server");
-        }
-        return res.json();
-      })
-      .then(data => {
-        if (Array.isArray(data)) {
-          setFeaturedProjects(data.slice(0, 3));
-        }
-      })
-      .catch(err => console.error('Failed to fetch home projects:', err));
-  }, []);
+  const featuredProjects = projects.slice(0, 3);
 
   const services = [
     { 

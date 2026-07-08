@@ -5,7 +5,8 @@ import ProjectPreview from '../components/ProjectPreview';
 import { Loader2, Sparkles } from 'lucide-react';
 import SEO from '../components/SEO';
 import { cn } from '../lib/utils';
-import 'react-quill-new/dist/quill.snow.css'; // Import styles for content rendering
+import 'react-quill-new/dist/quill.snow.css';
+import { projects } from '../data/projects';
 
 export interface Project {
   _id: string;
@@ -18,35 +19,14 @@ export interface Project {
 
 export default function Portfolio() {
   const [activeCategory, setActiveCategory] = useState("All");
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [projectsList] = useState<Project[]>(projects);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch('/api/projects')
-      .then(async res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new TypeError("Expected JSON response from server");
-        }
-        return res.json();
-      })
-      .then(data => {
-        setProjects(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Failed to fetch projects:', err);
-        setLoading(false);
-      });
-  }, []);
-
-  const categories = ["All", ...Array.from(new Set(projects.map(p => p.category)))];
+  const categories = ["All", ...Array.from(new Set(projectsList.map(p => p.category)))];
 
   const filteredProjects = activeCategory === "All" 
-    ? projects 
-    : projects.filter(p => p.category === activeCategory);
+    ? projectsList 
+    : projectsList.filter(p => p.category === activeCategory);
 
   return (
     <div className="pt-32 pb-20 bg-bg min-h-screen">
@@ -91,34 +71,25 @@ export default function Portfolio() {
           layout
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"
         >
-          {loading ? (
-            <div className="col-span-full flex flex-col items-center justify-center py-20 gap-4">
-              <Loader2 className="w-10 h-10 animate-spin text-primary" />
-              <p className="text-ink/60 font-mono text-sm uppercase tracking-widest">Loading Collection</p>
-            </div>
-          ) : (
-            <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, i) => (
-                <motion.div
-                  key={project._id || project.title}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <ProjectPreview 
-                    index={i}
-                    title={project.title} 
-                    category={project.category} 
-                    image={project.image} 
-                    link={project.link}
-                    onClick={() => navigate(`/portfolio/${project._id}`)}
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          )}
+          {filteredProjects.map((project, i) => (
+            <motion.div
+              key={project._id || project.title}
+              layout
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.4 }}
+            >
+              <ProjectPreview 
+                index={i}
+                title={project.title} 
+                category={project.category} 
+                image={project.image} 
+                link={project.link}
+                onClick={() => navigate(`/portfolio/${project._id}`)}
+              />
+            </motion.div>
+          ))}
         </motion.div>
       </div>
 
@@ -129,7 +100,7 @@ export default function Portfolio() {
             <p className="text-xl text-ink/60 mb-12 max-w-xl mx-auto">
               Our archive contains over 150+ successful deployments across fintech, healthtech, and creative industries.
             </p>
-            <a href="mailto:hello@webhub.agency" className="btn-primary py-4 px-12 text-lg inline-block">
+            <a href="mailto:webhubsolutions@gmail.com" className="btn-primary py-4 px-12 text-lg inline-block">
               Request Full Portfolio
             </a>
         </div>

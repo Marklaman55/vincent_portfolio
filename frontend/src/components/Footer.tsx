@@ -11,8 +11,8 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <h2 className="text-4xl font-display font-bold mb-6 tracking-tight">Let's build something <span className="text-primary">extraordinary</span> together.</h2>
             <p className="text-white/60 max-w-md mb-8">Currently available for selected freelance projects and collaborations. If you have an idea, let's make it a reality.</p>
-            <a href="mailto:hello@webhub.agency" className="text-2xl font-display font-bold hover:text-primary transition-colors flex items-center gap-4">
-              hello@webhub.agency <Mail className="w-6 h-6" />
+            <a href="mailto:webhubsolutions@gmail.com" className="text-2xl font-display font-bold hover:text-primary transition-colors flex items-center gap-4">
+              webhubsolutions@gmail.com <Mail className="w-6 h-6" />
             </a>
           </div>
 
@@ -49,11 +49,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-4">
-            <span className="text-xs font-mono text-white/40 uppercase tracking-widest">&copy; {currentYear} WebHub Technologies</span>
-            <Link to="/admin" className="text-[10px] font-mono text-white/10 hover:text-white/40 transition-colors uppercase tracking-widest ml-4">Admin Login</Link>
-          </div>
+          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-4">
+              <span className="text-xs font-mono text-white/40 uppercase tracking-widest">&copy; {currentYear} WebHub Technologies</span>
+            </div>
           <div className="flex gap-8 text-[10px] font-mono text-white/40 uppercase tracking-widest">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

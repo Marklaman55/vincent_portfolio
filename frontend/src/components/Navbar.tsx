@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Code2, Github, User as UserIcon } from 'lucide-react';
+import { Menu, X, Code2, Github } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
-import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,33 +48,23 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={cn(
-                  "font-mono text-xs uppercase tracking-widest transition-colors",
-                  location.pathname === link.path ? "text-primary font-bold" : "text-ink/60 hover:text-primary"
-                )}
-              >
-                {link.name}
-              </Link>
-            ))}
-            
-            <a href="https://github.com/Marklaman55" target="_blank" rel="noopener noreferrer" className="text-ink/40 hover:text-ink transition-colors">
-              <Github size={18} />
-            </a>
-
-            {user ? (
-              <Link to="/account" className="flex items-center gap-2 px-4 py-2 bg-ink/5 rounded-xl text-ink font-mono text-[10px] uppercase tracking-widest hover:bg-ink hover:text-white transition-all">
-                <UserIcon size={14} /> Account
-              </Link>
-            ) : (
-              <Link to="/login" className="btn-primary py-3 px-8 text-xs">
-                Log In
-              </Link>
-            )}
-          </div>
+             {navLinks.map((link) => (
+               <Link
+                 key={link.path}
+                 to={link.path}
+                 className={cn(
+                   "font-mono text-xs uppercase tracking-widest transition-colors",
+                   location.pathname === link.path ? "text-primary font-bold" : "text-ink/60 hover:text-primary"
+                 )}
+               >
+                 {link.name}
+               </Link>
+             ))}
+             
+             <a href="https://github.com/Marklaman55" target="_blank" rel="noopener noreferrer" className="text-ink/40 hover:text-ink transition-colors">
+               <Github size={18} />
+             </a>
+           </div>
 
           {/* Mobile Toggle */}
           <button 
@@ -110,30 +98,16 @@ export default function Navbar() {
                   {link.name}
                 </Link>
               ))}
-              <div className="pt-6 border-t border-ink/5 flex flex-col gap-4">
-                <a 
-                  href="https://github.com/Marklaman55" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-ink/60 font-mono text-xs uppercase tracking-widest"
-                >
-                  <Github size={18} /> GitHub Profile
-                </a>
-                {user ? (
-                  <Link to="/account" className="btn-primary py-4 text-center">
-                    My Account
-                  </Link>
-                ) : (
-                  <div className="grid grid-cols-2 gap-4">
-                    <Link to="/login" className="px-6 py-4 rounded-xl bg-ink/5 text-ink font-display font-bold text-center">
-                      Log In
-                    </Link>
-                    <Link to="/signup" className="btn-primary py-4 text-center">
-                      Sign Up
-                    </Link>
-                  </div>
-                )}
-              </div>
+              <div className="pt-6 border-t border-ink/5">
+                 <a 
+                   href="https://github.com/Marklaman55" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   className="flex items-center gap-3 text-ink/60 font-mono text-xs uppercase tracking-widest"
+                 >
+                   <Github size={18} /> GitHub Profile
+                 </a>
+               </div>
             </div>
           </motion.div>
         )}
